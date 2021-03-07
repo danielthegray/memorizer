@@ -1,8 +1,99 @@
  <!DOCTYPE html>
 <html>
+<head>
+ <meta charset="UTF-8">
 <title>Memorizer</title>
+<style>
+:root {
+	--bckcolor: #fff;
+	--txtcolor: #000;
+	--fontsize: 16pt;
+}
+body {
+	width: 100vw;
+	height: 100vh;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+}
+.input {
+	max-width: 1140px;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	margin: auto;
+}
+.input label {
+	padding: 1.5em;
+}
+.input textarea {
+	padding: 1em;
+	border-radius: 0.5em;
+	border: 1px solid var(--txtcolor);
+	font-size: var(--fontsize);
+	width: 100%;
+}
+.input button {
+	width: 15em;
+	padding: 30px 25px;
+	margin: 0.5em;
+	font-size: var(--fontsize);
+}
+.memopanel {
+	max-width: 1140px;
+	background-color: var(--bckcolor);
+	color: var(--txtcolor);
+	font-size: calc(var(--fontsize)*2);
+	line-height: 1.6em;
+}
+.memoword {
+	cursor: pointer;
+}
+</style>
+<script>
+function ready(fn) {
+	if (document.readyState != 'loading'){
+		fn();
+	} else {
+		document.addEventListener('DOMContentLoaded', fn);
+	}
+}
+function hideWord(event) {
+	console.log(event.target);
+	event.target.setAttribute("style", "color: var(--bckcolor);");
+}
+ready(function(){
+	var memoButton = document.getElementById("start-memorizing");
+	if (memoButton == null) {
+		console.error("Start button not found!");
+		return;
+	}
+	memoButton.addEventListener("click", function(event) {
+		const textToMemorize = document.getElementById("memotext").value.trim();
+		document.querySelector(".input").remove();
+		const textSplitIntoWords = textToMemorize.split(/\s+/);
+		const memoPanel = document.createElement("div");
+		memoPanel.setAttribute("class", "memopanel");
+		textSplitIntoWords.forEach(word => {
+			var wordContainer = document.createElement("span");
+			wordContainer.setAttribute("class", "memoword");
+			wordContainer.innerHTML = word;
+			wordContainer.addEventListener("click", hideWord);
+			memoPanel.append(wordContainer);
+			memoPanel.append(document.createTextNode(" "));
+		});
+		document.body.append(memoPanel);
+	});
+});
+
+</script>
+</head>
 <body>
-<label for="memotext">Please input the text (e.g. Bible verse(s)) that you would like help with memorizing:</label>
-<textarea id="memotext"></textarea>
+	<div class="input">
+		<label for="memotext">Please input the text (e.g. Bible verse(s)) that you would like help with memorizing:</label>
+		<textarea id="memotext" rows="7"></textarea>
+		<button id="start-memorizing" type="button">Start</button>
+	</div>
 </body>
 </html> 
